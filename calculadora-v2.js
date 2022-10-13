@@ -1,3 +1,8 @@
+const readline = require("readline").createInterface({
+    input: process.stdin,
+    output: process.stdout
+})
+
 const PREÇO_ESTADO = {
     //Sudeste
     SP: 'R$5,00',
@@ -24,3 +29,19 @@ const PREÇO_ESTADO = {
 }
 
 const PREÇO_SAOPAULO = 'R$0,00'
+
+
+const main = () => {
+    readline.question("X: ", function(x) {
+        readline.question("Y: ", function(y) {
+            const xBetter = parseInt(x)
+            const yBetter = parseInt(y)
+            const soma = xBetter + yBetter;
+            console.log(soma)
+
+            readline.close();
+        });
+    });
+}
+
+main()
