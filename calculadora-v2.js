@@ -1,9 +1,9 @@
 const readline = require("readline").createInterface({
     input: process.stdin,
     output: process.stdout
-})
+});
 
-const PREÇO_ESTADO = {
+const PREÇOS_ESTADO = {
     //Sudeste
     SP: 'R$5,00',
     RJ: 'R$6,50',
@@ -26,18 +26,50 @@ const PREÇO_ESTADO = {
     MT: 'R$11,50',
     MS: 'R$11,50',
     //Nordeste R$15,00
+};
+
+const PREÇO_SAO_PAULO = 'R$0,00';
+
+const renderMensagem = (endereço, nomeProduto) => {
+    const mensagem = [
+        "Olá, boas vindas à nossa loja.",
+        "Já recebemos as informações e iremos mandar",
+        `o produto ${nomeProduto}`,
+        `para ${endereço}`
+    ];
+
+    return mensagem.join(" ");
 }
 
-const PREÇO_SAOPAULO = 'R$0,00'
+const calculo = (endereço, nomeProduto) => {
+    const mensagem = renderMensagem(endereço, nomeProduto);
+
+    console.log(mensagem);
+};
+
+const getCidade = (endereço) => {
+    const segmentos = endereço.split('-');
+    let cidade = segmentos[0];
+    cidade = cidade.trim();
+
+    return cidade;
+}
+
+const  getEstado = (endereço) => {
+    const segmentos = endereço.split('-');
+    let estado = segmentos[1];
+    estado = estado.trim();
+
+    return estado;
+}
 
 
 const main = () => {
-    readline.question("X: ", function(x) {
-        readline.question("Y: ", function(y) {
-            const xBetter = parseInt(x)
-            const yBetter = parseInt(y)
-            const soma = xBetter + yBetter;
-            console.log(soma)
+    readline.question("Endereço: ", function(endereço) {
+        readline.question("Qual é o produto: ", function(nomeProduto) {
+            //calculo(endereço, nomeProduto);
+
+            console.log(getEstado(endereço) === "SP");
 
             readline.close();
         });
