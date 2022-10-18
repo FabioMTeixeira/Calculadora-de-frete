@@ -25,24 +25,44 @@ const PREÇOS_ESTADO = {
     GO: 'R$11,50',
     MT: 'R$11,50',
     MS: 'R$11,50',
-    //Nordeste R$15,00
+    //Nordeste
+    BA: 'R$15,00',
+    CE: 'R$15,00',
+    MA: 'R$15,00',
+    RN: 'R$15,00',
+    PE: 'R$15,00',
+    AL: 'R$15,00',
+    SE: 'R$15,00',
+    PB: 'R$15,00'
 };
 
 const PREÇO_SAO_PAULO = 'R$0,00';
 
-const renderMensagem = (endereço, nomeProduto) => {
+const renderMensagem = (cidade, estado, nomeProduto, valorFrete) => {
     const mensagem = [
         "Olá, boas vindas à nossa loja.",
         "Já recebemos as informações e iremos mandar",
         `o produto ${nomeProduto}`,
-        `para ${endereço}`
+        `para ${cidade} - ${estado}.`,
+        `O valor do frete será ${valorFrete}`
     ];
 
     return mensagem.join(" ");
 }
 
-const calculo = (endereço, nomeProduto) => {
-    const mensagem = renderMensagem(endereço, nomeProduto);
+const calculo = (cidade, estado, nomeProduto) => {
+    let valorFrete = "R$0,00";
+
+    if(cidade === "sao paulo") {
+        valorFrete = PREÇO_SAO_PAULO;
+    } else {
+        valorFrete = PREÇOS_ESTADO[estado];
+    }
+    if(valorFrete === undefined) {
+        valorFrete = "R$0,00, não enviamos para tão longe.";
+    }
+    
+    const mensagem = renderMensagem(cidade, estado, nomeProduto, valorFrete);
 
     console.log(mensagem);
 };
@@ -50,7 +70,9 @@ const calculo = (endereço, nomeProduto) => {
 const getCidade = (endereço) => {
     const segmentos = endereço.split('-');
     let cidade = segmentos[0];
-    cidade = cidade.trim();
+    cidade = cidade.trim(); // tira o espaço extra
+    cidade = cidade.toLowerCase();
+    cidade = cidade.replace('ã', 'a');
 
     return cidade;
 }
@@ -59,6 +81,7 @@ const  getEstado = (endereço) => {
     const segmentos = endereço.split('-');
     let estado = segmentos[1];
     estado = estado.trim();
+    estado = estado.toUpperCase();
 
     return estado;
 }
@@ -67,9 +90,11 @@ const  getEstado = (endereço) => {
 const main = () => {
     readline.question("Endereço: ", function(endereço) {
         readline.question("Qual é o produto: ", function(nomeProduto) {
-            //calculo(endereço, nomeProduto);
+            const cidade = getCidade(endereço);
+            const estado = getEstado(endereço);
 
-            console.log(getEstado(endereço) === "SP");
+            calculo(cidade, estado, nomeProduto);
+
 
             readline.close();
         });
