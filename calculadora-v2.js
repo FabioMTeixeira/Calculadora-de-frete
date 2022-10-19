@@ -50,7 +50,7 @@ const renderMensagem = (cidade, estado, nomeProduto, valorFrete) => {
     return mensagem.join(" ");
 }
 
-const calculo = (cidade, estado, nomeProduto) => {
+const calculoFrete = (cidade, estado) => {
     let valorFrete = "R$0,00";
 
     if(cidade === "sao paulo") {
@@ -60,11 +60,9 @@ const calculo = (cidade, estado, nomeProduto) => {
     }
     if(valorFrete === undefined) {
         valorFrete = "R$0,00, não enviamos para tão longe.";
-    }
-    
-    const mensagem = renderMensagem(cidade, estado, nomeProduto, valorFrete);
+    };
 
-    console.log(mensagem);
+    return valorFrete;
 };
 
 const getCidade = (endereço) => {
@@ -93,12 +91,14 @@ const main = () => {
             const cidade = getCidade(endereço);
             const estado = getEstado(endereço);
 
-            calculo(cidade, estado, nomeProduto);
+            const frete = calculoFrete(cidade, estado);
+            const mensagem = renderMensagem(cidade, estado, nomeProduto, frete);
 
+            console.log(mensagem);
 
             readline.close();
         });
     });
 }
 
-main()
+main();
