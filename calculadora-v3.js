@@ -66,46 +66,65 @@ const calculoFrete = (cidade, estado) => {
 };
 
 const getCidade = (endereco) => {
-    const segmentos = endereco.split('-');
-    let cidade = segmentos[0];
-    cidade = cidade.trim(); // tira o espaço extra
-    cidade = cidade.toLowerCase();
-    cidade = cidade.replace('ã', 'a');
-
-    return cidade;
+    try{
+        const segmentos = endereco.split('-');
+        let cidade = segmentos[0];
+        cidade = cidade.trim(); // tira o espaço extra
+        cidade = cidade.toLowerCase();
+        cidade = cidade.replace('ã', 'a');
+    
+        return cidade;
+    } catch(e) {
+        console.log(e);
+        
+        return "";
+    }
 }
 
 const  getEstado = (endereco) => {
-    const segmentos = endereco.split('-');
-    let estado = segmentos[1];
-    estado = estado.trim();
-    estado = estado.toUpperCase();
+    try {
+        const segmentos = endereco.split('-');
+        let estado = segmentos[1];
+        estado = estado.trim();
+        estado = estado.toUpperCase();
+    
+        return estado;
+    } catch(e) {
+        console.log(e);
 
-    return estado;
+        return "";
+    }
 }
 
 
 const main = () => {
-
     const servidor = http.createServer((request, response) => {
-        const query = url.parse(request.url, true).query;
+        const parsedUrl = url.parse(request.url, true);
+        if(parsedUrl.pathname === "/") {
 
-        console.log(query);
-
-        const endereco = "sao paulo - sp";
-        const nomeProduto = "camiseta";
+            const query = parsedUrl.query;
     
-        const cidade = getCidade(endereco);
-        const estado = getEstado(endereco);
-    
-        const frete = calculoFrete(cidade, estado);
-        const mensagem = renderMensagem(cidade, estado, nomeProduto, frete);
-    
-        response.writeHead(200, {
-            'Content-Type': 'text/plain; charset=UTF-8'
-        });
-        response.end(mensagem); 
+            const endereco = query.endereco;
+            const nomeProduto = query.nomeProduto;
+        
+            const cidade = getCidade(endereco);
+            const estado = getEstado(endereco);
+        
+            const frete = calculoFrete(cidade, estado);
+            const mensagem = renderMensagem(cidade, estado, nomeProduto, frete);
+        
+            response.writeHead(200, {
+                'Content-Type': 'text/plain; charset=UTF-8'
+            });
+            response.end(mensagem); 
+        } else {
+            response.writeHead(404, {
+                'Content-Type': 'text/plain; charset=UTF-8'
+            });
+            response.end();
+        }
     });
+        
 
     console.log(`Servidor rodando na porta ${PORTA}`);
     servidor.listen(PORTA);
