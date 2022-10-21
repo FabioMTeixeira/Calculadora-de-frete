@@ -43,7 +43,7 @@ const renderMensagem = (cidade, estado, nomeProduto, valorFrete) => {
         "Olá, boas vindas à nossa loja.",
         "Já recebemos as informações e iremos mandar",
         `o produto ${nomeProduto}`,
-        `para ${cidade} - ${estado}.`,
+        `para ${cidade.toUpperCase()} - ${estado}.`,
         `O valor do frete será ${valorFrete}`
     ];
 
@@ -112,14 +112,21 @@ const main = () => {
         
             const frete = calculoFrete(cidade, estado);
             const mensagem = renderMensagem(cidade, estado, nomeProduto, frete);
+
+            const body = {
+                mensagem: mensagem,
+                frete: frete,
+                cidade: cidade,
+                estado: estado
+            };
         
             response.writeHead(200, {
-                'Content-Type': 'text/plain; charset=UTF-8'
+                'Content-Type': 'application/json; charset=UTF-8'
             });
-            response.end(mensagem); 
+            response.end(JSON.stringify(body)); 
         } else {
             response.writeHead(404, {
-                'Content-Type': 'text/plain; charset=UTF-8'
+                'Content-Type': 'application/json; charset=UTF-8'
             });
             response.end();
         }
